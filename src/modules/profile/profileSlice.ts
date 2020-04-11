@@ -2,35 +2,31 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store/reducer";
 
 interface UserInfo {
+  id: null | string;
+  name: string;
+  email: string;
+  balance: number;
+}
+
+interface ProfileData {
   id?: null | string;
   name?: string;
   email?: string;
-  balance?: string;
-}
-
-interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
+  balance?: number;
 }
 
 export const initialState: UserInfo = {
   id: null,
   name: "",
   email: "",
-  balance: "",
+  balance: 0,
 };
 
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    setUserInfo: (state, action: PayloadAction<UserInfo>) => ({
+    setUserInfo: (state, action: PayloadAction<ProfileData>) => ({
       ...state,
       ...action.payload,
     }),
