@@ -1,4 +1,5 @@
 import { userApi } from "api";
+import Axios, { AxiosResponse } from "axios";
 import { Loading } from "components/Loading";
 import { profileSelector, setUserInfo } from "modules/profile/profileSlice";
 import React, { useEffect, useState } from "react";
@@ -10,22 +11,32 @@ const loadGuestApp = () => import("./GuestApp");
 const UserApp = React.lazy(loadUserApp);
 const GuestApp = React.lazy(loadGuestApp);
 
-export const App = () => {
+export function App() {
   const dispatch = useDispatch();
   const profile = useSelector(profileSelector);
   const [isLoading, setLoading] = useState<boolean>(false);
-  // const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+    let source = Axios.CancelToken.source();
+
+    const updateProfile = ({ data }: AxiosResponse) =>
+      mounted && dispatch(setUserInfo(data["user_info_token"]));
+
     function fetchProfile() {
       userApi
         .info()
-        .then(({ data }: any) => dispatch(setUserInfo(data["user_info_token"])))
+        .then((data) => updateProfile(data))
         .finally(() => setLoading(false));
     }
 
     setLoading(true);
     fetchProfile();
+
+    return () => {
+      mounted = false;
+      source.cancel();
+    };
   }, [dispatch]);
 
   useEffect(() => {
@@ -34,4 +45,4 @@ export const App = () => {
 
   if (isLoading) return <Loading />;
   return profile.id ? <UserApp /> : <GuestApp />;
-};
+}
