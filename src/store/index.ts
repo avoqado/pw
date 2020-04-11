@@ -6,7 +6,11 @@ const preloadedState = {
     id: null,
     name: "",
     email: "",
-    balance: "",
+    balance: 0,
+  },
+  transactionForm: {
+    name: "",
+    amount: 0,
   },
   transactions: [],
 };
