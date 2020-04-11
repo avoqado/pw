@@ -33,11 +33,10 @@ export function TransactionFormView() {
           name="name"
           label="Name"
           type="text"
-          id="password"
+          id="name"
           autoComplete="name"
           required
           fullWidth
-          autoFocus
         />
         <Field
           component={TextField}
@@ -50,7 +49,6 @@ export function TransactionFormView() {
           required
           fullWidth
         />
-
         <Button
           type="submit"
           variant="contained"

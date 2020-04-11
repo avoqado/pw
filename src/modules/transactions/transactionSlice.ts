@@ -3,7 +3,7 @@ import { RootState } from "store/reducer";
 
 type TransactionList = Transaction[];
 
-interface Transaction {
+export interface Transaction {
   id: number;
   date: string;
   username: string;

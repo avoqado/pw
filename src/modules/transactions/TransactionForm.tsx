@@ -1,50 +1,53 @@
 import { transactionsApi } from "api";
+import { AxiosResponse } from "axios";
 import { Formik } from "formik";
 import { profileSelector, setUserInfo } from "modules/profile/profileSlice";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
+import {
+  formSelector,
+  TransactionFormState,
+  updateTransactionForm,
+} from "./transactionFormSlice";
 import { TransactionFormView } from "./TransactionFormView";
 import { addTransactions } from "./transactionSlice";
 
-interface FromValues {
-  amount: number;
-  name: string;
-}
+const validationSchema = (maxAmount: number) =>
+  Yup.object().shape({
+    amount: Yup.number().max(maxAmount).required("Amount is required"),
+    name: Yup.string().required("Name is required"),
+  });
 
-const validationSchema = Yup.object().shape({
-  amount: Yup.number().required("Amount is required"),
-  name: Yup.string().required("Name is required"),
-});
-
-export const TransactionForm: React.FC = () => {
+export function TransactionForm() {
   const profile = useSelector(profileSelector);
+  const formState = useSelector(formSelector);
   const dispatch = useDispatch();
-  const initialValues: FromValues = {
-    amount: 100,
-    name: "",
-  };
 
-  const handleSubmit = (values: FromValues, actions: any) => {
+  const handleSubmit = (values: TransactionFormState, actions: any) => {
     transactionsApi
       .create(values)
-      .then(({ data }: any) => {
+      .then(({ data }: AxiosResponse) => {
         const transaction = data.trans_token;
         const balance = profile.balance + transaction.amount;
 
         dispatch(addTransactions([transaction]));
         dispatch(setUserInfo({ balance }));
-      }) // TODO: add dispatchers
+        dispatch(updateTransactionForm({ name: "", amount: 0 }));
+
+        actions.resetForm();
+      })
       .catch((error) => actions.setFieldError("amount", error.response.data))
       .finally(() => actions.setSubmitting(false));
   };
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
+      initialValues={formState}
+      validationSchema={validationSchema(profile.balance)}
       onSubmit={handleSubmit}
       component={TransactionFormView}
+      enableReinitialize
     ></Formik>
   );
-};
+}
