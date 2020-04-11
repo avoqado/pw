@@ -1,65 +1,65 @@
-import classes from "*.module.css";
-import { Card } from "@material-ui/core";
+import {
+  IconButton,
+  makeStyles,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@material-ui/core";
+import { green, red } from "@material-ui/core/colors";
+import { FileCopy } from "@material-ui/icons";
+import { Transaction as ITransaction } from "modules/transactions/transactionSlice";
 import React from "react";
+import { useDispatch } from "react-redux";
+import {
+  TransactionFormState,
+  updateTransactionForm,
+} from "./transactionFormSlice";
 
-export const Transaction: React.FC = () => {
+const useStyles = makeStyles((theme) => ({
+  red: {
+    color: red[400],
+  },
+  green: {
+    color: green[400],
+  },
+}));
+
+export function Transaction({
+  id,
+  amount,
+  username,
+  balance,
+  date,
+}: ITransaction) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const copyTemplate = (formState: TransactionFormState) => () =>
+    dispatch(updateTransactionForm(formState));
+
   return (
-    <Card className={classes.card} elevation={0}>
-      {/* <CardHeader
-        title={
-          <>
-            <Typography variant="subtitle1" display={"inline"}>
-            </Typography>
-            <Typography
-              className={classes.username}
-              variant="subtitle1"
-              display={"inline"}
-              color={"textSecondary"}
-            >
-            </Typography>
-          </>
-        }
-        subheader={
-          <Typography
-            variant="caption"
-            display={"inline"}
-            color={"textSecondary"}
-          >
-            {unixToDate(createdAt)}
-          </Typography>
-        }
-        action={
-          <IconButton onClick={showMenu} aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-      />
+    <TableRow key={id}>
+      <TableCell component="th" scope="row">
+        <Typography variant="button">{username}</Typography>
+      </TableCell>
 
-      <CardActions disableSpacing>
-        <Button startIcon={<AccountBalanceWallet />} disableRipple>
-          {priceWithCurrency(price)}
-        </Button>
-        <Button
-          onClick={showStageMenu}
-          startIcon={<Label style={{ color: stage.color }} />}
-        >
-          {stage.name}
-        </Button>
+      <TableCell
+        align="center"
+        className={classes[amount >= 0 ? "green" : "red"]}
+      >
+        <Typography variant="button">{amount}</Typography>
+      </TableCell>
 
+      <TableCell align="center">{balance}PW</TableCell>
+      <TableCell align="center">{date}</TableCell>
+
+      <TableCell padding="checkbox">
         <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
+          aria-label="delete"
+          onClick={copyTemplate({ amount: -amount, name: username })}
         >
-          <ExpandMoreIcon />
+          <FileCopy />
         </IconButton>
-      </CardActions>
-
-      <StageMenu id={id} anchor={stageAnchor} handleClose={hideStageMenu} />
-      <DealMenu id={id} anchor={menuAnchor} handleClose={hideMenu} /> */}
-    </Card>
+      </TableCell>
+    </TableRow>
   );
-};
+}
