@@ -15,8 +15,10 @@ const transactionsSlice = createSlice({
   name: "transactions",
   initialState: [],
   reducers: {
-    addTransactions: (state, action: PayloadAction<any>) =>
-      state.concat(action.payload),
+    addTransactions: (state, action: PayloadAction<any>) => [
+      ...action.payload,
+      ...state,
+    ],
   },
 });
 

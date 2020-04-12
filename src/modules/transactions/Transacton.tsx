@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { green, red } from "@material-ui/core/colors";
-import { FileCopy } from "@material-ui/icons";
+import { FileCopyOutlined } from "@material-ui/icons";
 import { Transaction as ITransaction } from "modules/transactions/transactionSlice";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -57,7 +57,7 @@ export function Transaction({
           aria-label="delete"
           onClick={copyTemplate({ amount: -amount, name: username })}
         >
-          <FileCopy />
+          <FileCopyOutlined />
         </IconButton>
       </TableCell>
     </TableRow>

@@ -1,8 +1,24 @@
-import { Button, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+  Button,
+  makeStyles,
+  Paper,
+  TextField as MTextField,
+  Typography,
+} from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
+import { Autocomplete } from "@material-ui/lab";
+import { userApi } from "api";
+import { AxiosResponse } from "axios";
 import { Field, Form } from "formik";
 import { TextField } from "formik-material-ui";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { formSelector, updateTransactionForm } from "./transactionFormSlice";
+
+interface Option {
+  id: number;
+  name: string;
+}
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -10,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(2, 0, 2),
+    margin: theme.spacing(1, 0, 2),
     backgroundColor: grey[900],
   },
   paper: {
@@ -21,12 +37,42 @@ const useStyles = makeStyles((theme) => ({
 
 export function TransactionFormView() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const form = useSelector(formSelector);
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const fillOptions = ({ data }: AxiosResponse) =>
+      setOptions(data.map((user) => user.name));
+
+    userApi.all().then((data) => fillOptions(data));
+  }, []);
 
   return (
     <Paper className={classes.paper} elevation={3}>
       <Typography variant="h6">Send PW</Typography>
-      <Form className={classes.form} noValidate>
-        <Field
+      <Form className={classes.form}>
+        <Autocomplete
+          id="combo-box-demo"
+          options={options}
+          getOptionLabel={(option) => option}
+          value={form.name}
+          onChange={(event, value) =>
+            dispatch(updateTransactionForm({ name: value }))
+          }
+          renderInput={(params) => (
+            <MTextField
+              {...params}
+              label="Name"
+              size="small"
+              variant="outlined"
+              fullWidth
+              required
+            />
+          )}
+        />
+
+        {/* <Field
           component={TextField}
           variant="outlined"
           margin="normal"
@@ -37,7 +83,7 @@ export function TransactionFormView() {
           autoComplete="name"
           required
           fullWidth
-        />
+        /> */}
         <Field
           component={TextField}
           variant="outlined"
@@ -46,6 +92,7 @@ export function TransactionFormView() {
           label="Amount"
           name="amount"
           autoComplete="amount"
+          size="small"
           required
           fullWidth
         />

@@ -27,6 +27,7 @@ export function App() {
       userApi
         .info()
         .then((data) => updateProfile(data))
+        .catch()
         .finally(() => setLoading(false));
     }
 

@@ -6,6 +6,11 @@ export interface TransactionFormState {
   name: string;
 }
 
+export interface TransactionFormData {
+  amount?: number;
+  name?: string;
+}
+
 const initialState = {
   name: "",
   amount: 0,
@@ -17,8 +22,8 @@ const formSlice = createSlice({
   reducers: {
     updateTransactionForm: (
       state,
-      action: PayloadAction<TransactionFormState>
-    ) => action.payload,
+      action: PayloadAction<TransactionFormData>
+    ) => ({ ...state, ...action.payload }),
   },
 });
 

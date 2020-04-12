@@ -61,7 +61,7 @@ export function TransactionList() {
 
   useEffect(() => {
     const loadTransactions = ({ data }: AxiosResponse) =>
-      dispatch(addTransactions(data.trans_token));
+      dispatch(addTransactions(data.trans_token.reverse()));
 
     transactionsApi
       .all()
@@ -84,7 +84,7 @@ function TransactionTable() {
   if (!transactions.length) return <Text content="History is empty." />;
   return (
     <TableContainer>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table} aria-label="transactins history">
         <TableHead>
           <TableRow>
             <TableCell>Correspondent Name</TableCell>

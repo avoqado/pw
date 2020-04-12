@@ -5,11 +5,7 @@ import { profileSelector, setUserInfo } from "modules/profile/profileSlice";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import {
-  formSelector,
-  TransactionFormState,
-  updateTransactionForm,
-} from "./transactionFormSlice";
+import { formSelector, updateTransactionForm } from "./transactionFormSlice";
 import { TransactionFormView } from "./TransactionFormView";
 import { addTransactions } from "./transactionSlice";
 
@@ -24,7 +20,7 @@ export function TransactionForm() {
   const formState = useSelector(formSelector);
   const dispatch = useDispatch();
 
-  const handleSubmit = (values: TransactionFormState, actions: any) => {
+  const handleSubmit = (values, actions) => {
     transactionsApi
       .create(values)
       .then(({ data }: AxiosResponse) => {
