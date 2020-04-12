@@ -1,8 +1,10 @@
-import { userApi } from "api";
+import { jwtDecode, userApi } from "api";
 import { Formik } from "formik";
 import * as React from "react";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { LoginFormView } from "./LoginFormView";
+import { setUserInfo } from "./profileSlice";
 
 interface FromValues {
   email: string;
@@ -15,17 +17,26 @@ const validationSchema = Yup.object().shape({
 });
 
 export const LoginForm: React.FC = () => {
+  const dispatch = useDispatch();
+
   const initialValues: FromValues = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = (values: FromValues, actions: any) => {
+  const handleSubmit = (values: FromValues, actions) => {
+    const updateProfile = (data) => {
+      const payload = jwtDecode(data.id_token);
+      dispatch(setUserInfo(payload));
+    };
+
     userApi
       .login(values)
-      .then(() => window.location.reload())
-      .catch((error) => actions.setFieldError("password", error.response.data))
-      .finally(() => actions.setSubmitting(false));
+      .then((data) => updateProfile(data))
+      .catch((error) => {
+        actions.setFieldError("password", error.response.data);
+        actions.setSubmitting(false);
+      });
   };
 
   return (

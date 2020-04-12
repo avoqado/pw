@@ -28,13 +28,16 @@ const FILTER_USERS = "/api/protected/users/list";
 const TRANSACTIONS = "/api/protected/transactions";
 
 const api = Axios.create({
-  timeout: 1000,
+  timeout: 5000,
   baseURL: BASE_URL,
   headers: {
     "Content-type": "application/json",
     Accept: "application/json",
   },
 });
+
+export const jwtDecode = (token: string) =>
+  JSON.parse(window.atob(token.split(".")[1]));
 
 const token = {
   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
