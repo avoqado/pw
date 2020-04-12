@@ -15,6 +15,7 @@ const transactionsSlice = createSlice({
   name: "transactions",
   initialState: [],
   reducers: {
+    resetTransactions: () => [],
     addTransactions: (state, action: PayloadAction<any>) => [
       ...action.payload,
       ...state,
@@ -22,7 +23,7 @@ const transactionsSlice = createSlice({
   },
 });
 
-export const { addTransactions } = transactionsSlice.actions;
+export const { resetTransactions, addTransactions } = transactionsSlice.actions;
 export default transactionsSlice.reducer;
 
 export const transactionSelector = (state: RootState) => state.transactions;

@@ -7,7 +7,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import { profileSelector, setUserInfo } from "modules/profile/profileSlice";
+import { profileSelector, resetUser } from "modules/profile/profileSlice";
+import { resetTransactions } from "modules/transactions/transactionSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -51,7 +52,10 @@ export function Header() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    dispatch(setUserInfo({ id: null }));
+
+    dispatch(resetUser());
+    dispatch(resetTransactions());
+
     handleClose();
   };
 

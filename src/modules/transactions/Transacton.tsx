@@ -37,7 +37,7 @@ export function Transaction({
     dispatch(updateTransactionForm(formState));
 
   return (
-    <TableRow key={id}>
+    <TableRow>
       <TableCell component="th" scope="row">
         <Typography variant="button">{username}</Typography>
       </TableCell>
