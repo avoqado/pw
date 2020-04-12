@@ -34,7 +34,7 @@ export const RegisterForm: React.FC = () => {
   const handleSubmit = (values: FromValues, actions) => {
     const updateProfile = (data) => {
       const payload = jwtDecode(data.id_token);
-      dispatch(setUserInfo(payload));
+      dispatch(setUserInfo({ ...payload, name: payload.username }));
     };
 
     userApi
