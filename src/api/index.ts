@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 
 interface RegisterData {
   username: string;
@@ -24,7 +24,7 @@ const BASE_URL = "http://193.124.114.46:3001/";
 const USERS = "/users";
 const LOGIN = "/sessions/create";
 const USER_PROFILE = "/api/protected/user-info";
-const FILTER_USERS = '"/api/protected/users/list';
+const FILTER_USERS = "/api/protected/users/list";
 const TRANSACTIONS = "/api/protected/transactions";
 
 const api = Axios.create({
@@ -40,14 +40,14 @@ const token = {
   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 };
 
-const storeToken = ({ data }: any) => {
+const storeToken = ({ data }: AxiosResponse) => {
   localStorage.setItem("token", data["id_token"]);
   return data;
 };
 
 export const userApi = {
   info: () => api.get(USER_PROFILE, token),
-  filter: (data: FilterData) => api.post(FILTER_USERS, data, token),
+  all: (filter: string = " ") => api.post(FILTER_USERS, { filter }, token),
   login: (data: LoginData) => api.post(LOGIN, data).then(storeToken),
   register: (data: RegisterData) => api.post(USERS, data).then(storeToken),
 };
