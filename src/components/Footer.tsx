@@ -24,9 +24,9 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link component={MLink} color="inherit" to="/">
+      <MLink component={Link} color="inherit" to="/">
         Parrot Wings
-      </Link>{" "}
+      </MLink>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
